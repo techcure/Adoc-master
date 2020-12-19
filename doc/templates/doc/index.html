@@ -1,0 +1,111 @@
+{% extends 'doc/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+<form action = "" method = "post" enctype='multipart/form-data'> 
+    {% csrf_token %} 
+    {{ form|crispy }}
+    <input type="submit" value="Submit"> 
+</form> 
+</div>
+</div>
+</div>
+
+{% if messages %}
+
+  {% for message in messages %}
+ <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+{% endfor %}
+
+{% endif %}
+</br>
+
+<table class="table table-bordered table-hover">
+  <thead>
+    <tr class="d-flex">
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone</th>
+      <th scope="col">File</th>
+      <th scope="col">Created Date *</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for x in queryset %}
+    <tr char="d-flex">
+      <th scope="row">{{x.id}}</th>
+      <td>{{x.name}}</td>
+      <td>{{x.email}}</td>
+      <td>{{x.phone}}</td>
+      <td><a href="media/{{ MEDIA_URL }}{{ x.upload }}" alt="{{ x.upload }}">{{x.upload }} </a></td>
+      <td>{{x.created_date}}</td>
+      <td><a href="{% url 'delete_view' x.id %}" class="delete"><span class="glyphicon glyphicon-trash"></span></a>
+       &nbsp;&nbsp; 
+
+      <a href="{% url 'edit_view' x.id %}" class="Edit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+
+    </tr>
+      {% endfor %}
+  </tbody>
+</table>
+
+<script type="text/javascript">
+  
+  $(function(){
+  $(".delete").click(function(){
+      swal({   
+          title: "Are you sure?",   
+          text: "You will not be able to recover this imaginary file!",   
+          type: "warning",   
+          showCancelButton: true,   
+          confirmButtonColor: "#DD6B55",   
+          confirmButtonText: "Yes, delete it!",   
+          closeOnConfirm: false 
+      }).then(isConfirmed => { 
+        if(isConfirmed) {
+          $(".file").addClass("isDeleted");
+          swal("Deleted!", "Your imaginary file has been deleted.", "success"); 
+}
+        });
+  });
+});
+</script>
+
+<!-- <div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">JSON</h5>
+        <p class="card-text">With supporting json file to convert into documents</p>
+        <a href="{% url 'jtod' %}" class="btn btn-primary">Convert JSON to DOCX</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">DOCX</h5>
+        <p class="card-text">With supporting document file to convert json file format</p>
+        <a href="{% url 'dtoj' %}" class="btn btn-primary">Convert DOCX to JSON</a>
+      </div>
+    </div>
+  </div>
+</div></br>
+    <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">JSON SAVE</h5>
+        <p class="card-text">With supporting document file to save json file format</p>
+        <a href="{% url 'jsonform' %}" class="btn btn-primary">SAVE JSON</a>
+      </div>
+    </div>
+  </div>
+</html> -->
+
+{% endblock %}

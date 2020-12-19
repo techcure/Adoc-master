@@ -1,0 +1,23 @@
+{% extends 'doc/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block content %}
+
+	<p>Convert JSON file into documents</p>
+	<form method = "post" enctype='multipart/form-data' id="docs" name="docs" action="{% url 'jtod' %}"> 
+	{% csrf_token %}
+	{{ form1|crispy }}
+    <input type="file" name="upload" onchange="form.submit()">
+</form> 
+<br>
+  <p><a href="{% url 'index' %}">Return to home</a></p>
+{% endblock %}
+</html>
+
+<script type="text/javascript">
+document.getElementById("docs").onchange = function() {
+    document.getElementById("docs").submit();
+};
+</script>
