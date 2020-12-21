@@ -16,6 +16,7 @@ class IndexView(View):
                 post = form.save(commit=True)
                 post.save()
                 messages.success(request, 'Success!.')
+                queryset = Reg.objects.all()
             return render(request, 'doc/index.html', {'form': form})
         else:
             form = RegForm()
@@ -138,6 +139,7 @@ class JsonView(View):
             form3 = JsonForm()
         return render(request, 'doc/jsonform.html', {'form3': form3})
 
+
 class DeleteView(View):
 
     def post(self, request, id):
@@ -146,7 +148,7 @@ class DeleteView(View):
         except ObjectDoesNotExist:
             go = None
         if go == None:
-            return HttpResponse('<p>  data doesnt exist </p>')
+            return HttpResponse('<p> data doesnt exist </p>')
         go.delete()
         return render(request, "doc/index.html", {'data': Reg.objects.all()})
 
@@ -156,9 +158,10 @@ class DeleteView(View):
         except ObjectDoesNotExist:
             go = None
         if go == None:
-            return HttpResponse('<p>  data doesnt exist </p>')
+            return HttpResponse('<p> data doesnt exist </p>')
         go.delete()
         return render(request, "doc/index.html", {'data': Reg.objects.all()})
+
 
 def update_view(request,id):
     
@@ -168,7 +171,7 @@ def update_view(request,id):
 
             ok = Reg.objects.get(pk=id)
             reg_form = RegForm(request.POST, request.FILES, instance = ok)
-            reg_form.save() #cleaned indenting, but would not save unless I added at least 6 characters.
+            reg_form.save()
             return redirect('index')
     else:
         ok = Reg.objects.get(pk = id)       
