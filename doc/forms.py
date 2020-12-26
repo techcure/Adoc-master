@@ -21,3 +21,10 @@ class JsonForm(forms.ModelForm):
     class Meta:
         model = Json
         fields = '__all__'
+
+
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        # exclude = ['name', 'publications']
+        fields = '__all__'

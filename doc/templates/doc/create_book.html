@@ -1,0 +1,51 @@
+{% extends 'doc/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+{% block content %}
+<form method="POST" id="postform">
+    {% csrf_token %}
+       {{book.name}}
+       {{book.publications}}
+    <input type="submit" value="submit" class="submit" onclick="create_book.call(this)">
+</form>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+$('#postform').on('submit', function(e){
+console.log("ok");
+e.preventDefault();
+
+  $.ajax({
+       type : $(this).attr("method"),
+       url: "{% url 'create_book' %}",
+       data:  $(this).serialize(),
+       dataType: "json",
+
+       success: function(data){
+          $('#output').html(data.msg) /* response message */
+       },
+
+       failure: function() {
+           
+       }
+   });
+});
+}
+
+</script>
+	
+</body>
+{% endblock %}
+
+</html>

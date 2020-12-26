@@ -6,11 +6,20 @@
 <div class="container">
   <div class="row">
     <div class="col">
-<form action = "" method = "post" enctype='multipart/form-data'> 
+
+
+<form action = "" method = "post" enctype='multipart/form-data' id="post-form"> 
     {% csrf_token %} 
     {{ form|crispy }}
     <input type="submit" value="Submit"> 
 </form> 
+
+<script type="text/javascript">
+$("#post-form").ajaxSubmit({url: 'index.html', type: 'post'})
+
+</script>
+
+
 </div>
 </div>
 </div>
@@ -38,15 +47,25 @@
   </thead>
   <tbody>
       {% for x in queryset %}
-    <tr char="d-flex">
+    <tr id="tr1" char="d-flex">
       <th scope="row">{{x.id}}</th>
       <td>{{x.name}}</td>
       <td>{{x.email}}</td>
       <td>{{x.phone}}</td>
       <td><a href="media/{{ MEDIA_URL }}{{ x.upload }}" alt="{{ x.upload }}">{{x.upload }} </a></td>
       <td>{{x.created_date}}</td>
-      <td><a href="{% url 'delete_view' x.id %}" class="delete"><span class="glyphicon glyphicon-trash"></span></a>
+
+
+
+ <!--      <td><a value ="{{x.id}}" class="delete" onclick="del()"></a>
+        -->
+        <td>
+        <span id ="pkou" class="glyphicon glyphicon-trash" onclick="del.call(this)" pk="{{ x.id }}">
+          </span>
+        
+
        &nbsp;&nbsp; 
+
 
       <a href="{% url 'edit_view' x.id %}" class="Edit"><span class="glyphicon glyphicon-pencil"></span></a></td>
 
@@ -54,6 +73,28 @@
       {% endfor %}
   </tbody>
 </table>
+
+<script type="text/javascript">
+
+function del(){
+        id = $(this).attr('pk');
+
+        $.ajax({
+            url: "{% url 'delete_view' %}",
+            data: { 'id' : id },
+            beforeSend: function(xhr) {
+              xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function(response){
+              location.reload()
+            }
+        });
+    }
+</script>
+
+
+<br>
+<a href="{% url 'create_book' %}" class=""><span class="glyphicon glyphicon-pencil"></span></a>
 <!-- 
 <script type="text/javascript">
   

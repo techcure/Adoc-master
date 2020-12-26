@@ -1,10 +1,25 @@
 from django.shortcuts import render, redirect
 from .forms import *
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from .models import *
 from django.views import View
 # from django.contrib.auth.decorators import login_required
+import json
+
+
+def create_book(request):
+    form = BookForm()
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        # name = request.POST.get('name')
+        # publications = request.POST.get('publications')
+        # Book.objects.create(name = name, publications=publications)
+        if form.is_valid():
+            form.save()
+        return JsonResponse({"msge":"Added"})
+    return render(request,"doc/create_book.html",{'book': form})
+    # return redirect('create_book')
 
 
 class IndexView(View):
@@ -140,31 +155,36 @@ class JsonView(View):
         return render(request, 'doc/jsonform.html', {'form3': form3})
 
 
-class DeleteView(View):
+# class DeleteView(View):
 
-    def post(self, request, id):
-        try:
-            go  = Reg.objects.get(id=id)
-        except ObjectDoesNotExist:
-            go = None
-        if go == None:
-            return HttpResponse('<p> data doesnt exist </p>')
-        go.delete()
-        return render(request, "doc/index.html", {'data': Reg.objects.all()})
+#     def post(self, request, id):
+#         try:
+#             go  = Reg.objects.get(id=id)
+#         except ObjectDoesNotExist:
+#             go = None
+#         if go == None:
+#             return HttpResponse('<p> data doesnt exist </p>')
+#         go.delete()
+#         return render(request, "doc/index.html", {'data': Reg.objects.all()})
 
-    def get(self, request, id):
-        try:
-            go  = Reg.objects.get(id=id)
-        except ObjectDoesNotExist:
-            go = None
-        if go == None:
-            return HttpResponse('<p> data doesnt exist </p>')
-        go.delete()
-        return render(request, "doc/index.html", {'data': Reg.objects.all()})
+#     def get(self, request, id):
+#         try:
+#             go  = Reg.objects.get(id=id)
+#         except ObjectDoesNotExist:
+#             go = None
+#         if go == None:
+#             return HttpResponse('<p> data doesnt exist </p>')
+#         go.delete()
+#         return render(request, "doc/index.html", {'data': Reg.objects.all()})
 
+
+def delete_view(request, *id):
+    Reg.objects.get(id=request.GET.get('id')).delete()
+
+    return HttpResponse()
 
 def update_view(request,id):
-    
+
     if request.method == 'POST':
         reg_form = RegForm(request.POST, request.FILES)
         if reg_form.is_valid():
@@ -174,7 +194,7 @@ def update_view(request,id):
             reg_form.save()
             return redirect('index')
     else:
-        ok = Reg.objects.get(pk = id)       
+        ok = Reg.objects.get(pk = id)
         reg_form = RegForm(instance=ok)
 
         return render(request, 'doc/index.html',{ 'form':reg_form })

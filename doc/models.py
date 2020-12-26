@@ -39,6 +39,13 @@ class Article(models.Model):
     def __str__(self):
         return self.headline
 
-
 class Json(models.Model):
     data = models.JSONField(max_length=25, blank=True, null=True)
+
+
+class Book(models.Model):
+    name = models.CharField(max_length=25, blank=True, null=True)
+    publications = models.CharField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
